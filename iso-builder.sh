@@ -75,7 +75,7 @@ cd $ISO_SOURCE/proxmox/packages
 
 # $ISO_SOURCE/proxmox/packages
 # Rename all proxmox names
-for f in *proxmox*; do mv -v "$f" "${f/proxmox/diba-bc}"; done;
+# for f in *proxmox*; do mv -v "$f" "${f/proxmox/diba-bc}"; done;
 
 # make squash
 echo "Making Squash from installer..."
