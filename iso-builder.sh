@@ -61,6 +61,51 @@ MANAGER_NAME=$(find . -name "*proxmox-backup-server_2.1.1-1*" -print)
 I18N_NAME=$(find . -name "*pbs-i18n_2.6-2*" -print)
 DOCS_NAME=$(find . -name "*proxmox-backup-docs_2.1.1*" -print)
 WIDGET_TOOLKIT_NAME=$(find . -name "*proxmox-widget-toolkit_3.4-3*" -print)
+DIBA_BC_NAME=$(find . -name "*proxmox-backup_2.1-1*" -print)
+KERNEL_HELPER_NAME=$(find . -name "*pve-kernel-helper_7.1-4*" -print)
+XTERMJS_NAME=$(find . -name "*pve-xtermjs_4.12.0-1*" -print)
+
+# Making XTERMJS_NAME
+echo "Making Diba BC xtermjs as deb package file (.deb)"
+sudo dpkg -X "$XTERMJS_NAME" unpack-deb/
+sudo rsync -avrP --no-owner --no-group --no-perms $ENGINE_PATH/app-root/xtermjs/ unpack-deb/
+sudo dpkg-deb -e "$XTERMJS_NAME" unpack-deb/DEBIAN/
+sudo dpkg-deb -b ./unpack-deb diba-bc-xtermjs-amd64.deb
+sudo rm -rf unpack-deb
+sudo chmod 555 diba-bc-xtermjs-amd64.deb
+sudo chown root:root diba-bc-xtermjs-amd64.deb
+echo "removed directory 'unpack-deb'"
+sudo rm -rvf "$XTERMJS_NAME"
+echo "Finish XTERMJS_NAME=$XTERMJS_NAME"
+set -e
+
+# Making KERNEL_HELPER_NAME
+echo "Making Diba BC kernel helper as deb package file (.deb)"
+sudo dpkg -X "$KERNEL_HELPER_NAME" unpack-deb/
+sudo rsync -avrP --no-owner --no-group --no-perms $ENGINE_PATH/app-root/kernel-helper/ unpack-deb/
+sudo dpkg-deb -e "$KERNEL_HELPER_NAME" unpack-deb/DEBIAN/
+sudo dpkg-deb -b ./unpack-deb diba-bc-kernel-helper-amd64.deb
+sudo rm -rf unpack-deb
+sudo chmod 555 diba-bc-kernel-helper-amd64.deb
+sudo chown root:root diba-bc-kernel-helper-amd64.deb
+echo "removed directory 'unpack-deb'"
+sudo rm -rvf "$KERNEL_HELPER_NAME"
+echo "Finish KERNEL_HELPER_NAME=$KERNEL_HELPER_NAME"
+set -e
+
+# Making DIBA_BC_NAME
+echo "Making Diba BC backup as deb package file (.deb)"
+sudo dpkg -X "$DIBA_BC_NAME" unpack-deb/
+sudo rsync -avrP --no-owner --no-group --no-perms $ENGINE_PATH/app-root/diba-bc/ unpack-deb/
+sudo dpkg-deb -e "$DIBA_BC_NAME" unpack-deb/DEBIAN/
+sudo dpkg-deb -b ./unpack-deb diba-bc-backup_amd64.deb
+sudo rm -rf unpack-deb
+sudo chmod 555 diba-bc-backup_amd64.deb
+sudo chown root:root diba-bc-backup_amd64.deb
+echo "removed directory 'unpack-deb'"
+sudo rm -rvf "$DIBA_BC_NAME"
+echo "Finish DIBA_BC_NAME=$DIBA_BC_NAME"
+set -e
 
 # Making WIDGET_TOOLKIT_NAME
 echo "Making Diba BC widget toolkit as deb package file (.deb)"
