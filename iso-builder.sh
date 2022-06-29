@@ -57,25 +57,70 @@ echo "removed directory 'tmp'"
 # Preparing deb packages and versions and Making them
 echo "Preparing deb packages and versions and Making them... ."
 cd $ISO_SOURCE/proxmox/packages
-# MANAGER_NAME=$(find . -name "*pbs-manager*" -print)
+MANAGER_NAME=$(find . -name "*proxmox-backup-server_2.1.1-1*" -print)
+I18N_NAME=$(find . -name "*pbs-i18n_2.6-2*" -print)
+DOCS_NAME=$(find . -name "*proxmox-backup-docs_2.1.1*" -print)
+WIDGET_TOOLKIT_NAME=$(find . -name "*proxmox-widget-toolkit_3.4-3*" -print)
 
-# Making widget toolkit
-# echo "Making Diba VC Making widget toolkit as deb package file (.deb)"
-# sudo dpkg -X "$TOOLKIT_NAME" unpack-deb/
-# sudo rsync -avrP --no-owner --no-group --no-perms $ENGINE_PATH/app-root/widget-toolkit/ unpack-deb/
-# sudo dpkg-deb -e "$TOOLKIT_NAME" unpack-deb/DEBIAN/
-# sudo dpkg-deb -b ./unpack-deb diba-bc-widget-toolkit_1.0-0_amd64.deb
-# sudo rm -rf unpack-deb
-# sudo chmod 555 diba-bc-widget-toolkit_1.0-0_amd64.deb
-# sudo chown root:root diba-bc-widget-toolkit_1.0-0_amd64.deb
-# echo "removed directory 'unpack-deb'"
-# sudo rm -rvf "$TOOLKIT_NAME"
-# echo "Finish TOOLKIT_NAME=$TOOLKIT_NAME"
-# set -e
+# Making WIDGET_TOOLKIT_NAME
+echo "Making Diba BC widget toolkit as deb package file (.deb)"
+sudo dpkg -X "$WIDGET_TOOLKIT_NAME" unpack-deb/
+sudo rsync -avrP --no-owner --no-group --no-perms $ENGINE_PATH/app-root/widget-toolkit/ unpack-deb/
+sudo dpkg-deb -e "$WIDGET_TOOLKIT_NAME" unpack-deb/DEBIAN/
+sudo dpkg-deb -b ./unpack-deb diba-bc-widget-toolkit_amd64.deb
+sudo rm -rf unpack-deb
+sudo chmod 555 diba-bc-widget-toolkit_amd64.deb
+sudo chown root:root diba-bc-widget-toolkit_amd64.deb
+echo "removed directory 'unpack-deb'"
+sudo rm -rvf "$WIDGET_TOOLKIT_NAME"
+echo "Finish WIDGET_TOOLKIT_NAME=$WIDGET_TOOLKIT_NAME"
+set -e
 
-# $ISO_SOURCE/proxmox/packages
+# Making DOCS_NAME
+echo "Making Diba BC docs as deb package file (.deb)"
+sudo dpkg -X "$DOCS_NAME" unpack-deb/
+sudo rsync -avrP --no-owner --no-group --no-perms $ENGINE_PATH/app-root/docs/ unpack-deb/
+sudo dpkg-deb -e "$DOCS_NAME" unpack-deb/DEBIAN/
+sudo dpkg-deb -b ./unpack-deb diba-bc-docs_amd64.deb
+sudo rm -rf unpack-deb
+sudo chmod 555 diba-bc-docs_amd64.deb
+sudo chown root:root diba-bc-docs_amd64.deb
+echo "removed directory 'unpack-deb'"
+sudo rm -rvf "$DOCS_NAME"
+echo "Finish DOCS_NAME=$DOCS_NAME"
+set -e
+
+# Making I18N
+echo "Making Diba BC i18n as deb package file (.deb)"
+sudo dpkg -X "$I18N_NAME" unpack-deb/
+sudo rsync -avrP --no-owner --no-group --no-perms $ENGINE_PATH/app-root/pbs-i18n/ unpack-deb/
+sudo dpkg-deb -e "$I18N_NAME" unpack-deb/DEBIAN/
+sudo dpkg-deb -b ./unpack-deb diba-bc-i18n_amd64.deb
+sudo rm -rf unpack-deb
+sudo chmod 555 diba-bc-i18n_amd64.deb
+sudo chown root:root diba-bc-i18n_amd64.deb
+echo "removed directory 'unpack-deb'"
+sudo rm -rvf "$I18N_NAME"
+echo "Finish I18N_NAME=$I18N_NAME"
+set -e
+
+# Making manager UI
+echo "Making Diba BC Making main ui as deb package file (.deb)"
+sudo dpkg -X "$MANAGER_NAME" unpack-deb/
+sudo rsync -avrP --no-owner --no-group --no-perms $ENGINE_PATH/app-root/main-ui/ unpack-deb/
+sudo dpkg-deb -e "$MANAGER_NAME" unpack-deb/DEBIAN/
+sudo dpkg-deb -b ./unpack-deb diba-bc-main-ui_amd64.deb
+sudo rm -rf unpack-deb
+sudo chmod 555 diba-bc-main-ui_amd64.deb
+sudo chown root:root diba-bc-main-ui_amd64.deb
+echo "removed directory 'unpack-deb'"
+sudo rm -rvf "$MANAGER_NAME"
+echo "Finish MANAGER_NAME=$MANAGER_NAME"
+set -e
+
 # Rename all proxmox names
-# for f in *proxmox*; do mv -v "$f" "${f/proxmox/diba-bc}"; done;
+cd $ISO_SOURCE/proxmox/packages
+for f in *proxmox*; do mv -v "$f" "${f/proxmox/diba-bc}"; done;
 
 # make squash
 echo "Making Squash from installer..."
@@ -109,8 +154,8 @@ echo "removed directory 'diba-bc-installer' and 'diba-bc-base'"
 # Making ISO file
 echo "Making ISO starting..."
 cd $ISO_SOURCE
-sudo cp --verbose -p $ROOT_DIR/Packages proxmox/packages/
-sudo chmod 444 proxmox/packages/Packages
+# sudo cp --verbose -p $ROOT_DIR/Packages proxmox/packages/
+# sudo chmod 444 proxmox/packages/Packages
 sudo mv proxmox diba-bc
 sudo xorriso -as mkisofs -o ../"$PRODUCT_NAME".iso -r -V "$PRODUCT_NAME" --grub2-mbr ../dibabc.mbr --protective-msdos-label -efi-boot-part --efi-boot-image  -c '/boot/boot.cat' -b '/boot/grub/i386-pc/eltorito.img' -no-emul-boot -boot-load-size 4 -boot-info-table --grub2-boot-info -eltorito-alt-boot -e '/efi.img' -no-emul-boot .
 cd $WORKING_DIRECTORY
